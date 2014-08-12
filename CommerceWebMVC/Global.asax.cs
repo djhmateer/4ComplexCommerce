@@ -1,22 +1,25 @@
 ﻿using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Microsoft.Practices.Unity;
+using Microsoft.Practices.Unity.Configuration;
+using StructureMap;
 
 namespace CommerceWebMVC
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-        protected void Application_Start()
-        {
-            AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+        //protected void Application_Start()
+        //{
+        //    AreaRegistration.RegisterAllAreas();
+        //    FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+        //    RouteConfig.RegisterRoutes(RouteTable.Routes);
+        //    BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            var controllerFactory = new CommerceControllerFactory();
+        //    var controllerFactory = new CommerceControllerFactory();
 
-            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
-        }
+        //    ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+        //}
 
         #region Castle Windsor, based on web.config
         /* Uncomment this section and comment out the current Application_Start to use this
@@ -56,18 +59,22 @@ namespace CommerceWebMVC
         #region StructureMap, Code as Configuration
         /* Uncomment this section and comment out the current Application_Start to use this
          * configuration */
-        //protected void Application_Start()
-        //{
-        //    MvcApplication.RegisterRoutes(RouteTable.Routes);
+        protected void Application_Start() {
+            AreaRegistration.RegisterAllAreas();
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-        //    var container = new Container();
-        //    Ploeh.Samples.Commerce.Web.StructureMap.CommerceCodeAsConfiguration.Configure(container);
+            //MvcApplication.RegisterRoutes(RouteTable.Routes);
 
-        //    var controllerFactory =
-        //        new Ploeh.Samples.Commerce.Web.StructureMap.StructureMapControllerFactory(container);
+            var container = new Container();
+            Ploeh.Samples.Commerce.Web.StructureMap.CommerceCodeAsConfiguration.Configure(container);
 
-        //    ControllerBuilder.Current.SetControllerFactory(controllerFactory);
-        //}
+            var controllerFactory =
+                new Ploeh.Samples.Commerce.Web.StructureMap.StructureMapControllerFactory(container);
+
+            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+        }
         #endregion
 
         #region StructureMap, convention-based
@@ -144,9 +151,13 @@ namespace CommerceWebMVC
         #region Unity, based on web.config
         /* Uncomment this section and comment out the current Application_Start to use this
          * configuration */
-        //protected void Application_Start()
-        //{
-        //    MvcApplication.RegisterRoutes(RouteTable.Routes);
+        //protected void Application_Start() {
+        //    AreaRegistration.RegisterAllAreas();
+        //    FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+        //    RouteConfig.RegisterRoutes(RouteTable.Routes);
+        //    BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+        //    //MvcApplication.RegisterRoutes(RouteTable.Routes);
 
         //    var container = new UnityContainer();
         //    container.LoadConfiguration();
