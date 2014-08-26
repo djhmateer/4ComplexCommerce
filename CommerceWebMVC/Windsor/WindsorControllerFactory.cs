@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Castle.Windsor;
+using System;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Castle.Windsor;
 
 namespace Ploeh.Samples.Commerce.Web.Windsor
 {
@@ -14,8 +14,7 @@ namespace Ploeh.Samples.Commerce.Web.Windsor
             this.container = container;
         }
 
-        protected override IController GetControllerInstance(
-            RequestContext requestContext, Type controllerType)
+        protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
         {
             return (IController)this.container.Resolve(controllerType);
         }

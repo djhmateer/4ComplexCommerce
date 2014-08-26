@@ -7,42 +7,38 @@ using Ploeh.Samples.Commerce.Web.PresentationModel.Controllers;
 using System.Configuration;
 using System.Web.Mvc;
 
-namespace Ploeh.Samples.Commerce.Web.Windsor
-{
-    public class CommerceWindsorInstaller : IWindsorInstaller
-    {
-        public void Install(IWindsorContainer container,
-            IConfigurationStore store)
-        {
-            container.Register(AllTypes
-                .FromAssemblyContaining<HomeController>()
-                .BasedOn<IController>()
-                .Configure(r => r.LifeStyle.PerWebRequest));
+namespace Ploeh.Samples.Commerce.Web.Windsor {
+    public class CommerceWindsorInstaller : IWindsorInstaller {
+public void Install(IWindsorContainer container, IConfigurationStore store) {
+    //Register
+    container.Register(AllTypes
+        .FromAssemblyContaining<HomeController>()
+        .BasedOn<IController>()
+        .Configure(r => r.LifeStyle.PerWebRequest));
+    //Register
+    container.Register(AllTypes
+        .FromAssemblyContaining<BasketService>()
+        .Where(t => t.Name.EndsWith("Service"))
+        .WithService
+        .AllInterfaces());
+    //Register
+    container.Register(AllTypes
+        .FromAssemblyContaining<BasketDiscountPolicy>()
+        .Where(t => t.Name.EndsWith("Policy"))
+        .WithService
+        .Select((t, b) => new[] { t.BaseType }));
 
-            container.Register(AllTypes
-                .FromAssemblyContaining<BasketService>()
-                .Where(t => t.Name.EndsWith("Service"))
-                .WithService
-                .AllInterfaces());
-            container.Register(AllTypes
-                .FromAssemblyContaining<BasketDiscountPolicy>()
-                .Where(t => t.Name.EndsWith("Policy"))
-                .WithService
-                .Select((t, b) => new[] { t.BaseType }));
-
-            string connectionString =
-                ConfigurationManager.ConnectionStrings
-                ["CommerceObjectContext"].ConnectionString;
-            container.Register(AllTypes
-                .FromAssemblyContaining<SqlProductRepository>()
-                .Where(t => t.Name.StartsWith("Sql"))
-                .WithService
-                .Select((t, b) => new[] { t.BaseType })
-                .Configure(r => r.LifeStyle.PerWebRequest
-                    .DependsOn((new
-                    {
-                        connString = connectionString
-                    }))));
-        }
+    string connectionString = ConfigurationManager.ConnectionStrings["CommerceObjectContext"].ConnectionString;
+    //Register
+    container.Register(AllTypes
+        .FromAssemblyContaining<SqlProductRepository>()
+        .Where(t => t.Name.StartsWith("Sql"))
+        .WithService
+        .Select((t, b) => new[] { t.BaseType })
+        .Configure(r => r.LifeStyle.PerWebRequest
+            .DependsOn((new {
+                connString = connectionString
+            }))));
+}
     }
 }

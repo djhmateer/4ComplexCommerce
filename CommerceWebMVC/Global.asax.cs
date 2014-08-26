@@ -44,22 +44,43 @@ namespace CommerceWebMVC
         #region Castle Windsor, convention-based
         /* Uncomment this section and comment out the current Application_Start to use this
          * configuration */
+        //protected void Application_Start() {
+        //    AreaRegistration.RegisterAllAreas();
+        //    FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+        //    RouteConfig.RegisterRoutes(RouteTable.Routes);
+        //    BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+        //    var container = new WindsorContainer();
+        //    container.Install(new CommerceWindsorInstaller());
+
+        //    var controllerFactory = new WindsorControllerFactory(container);
+
+        //    ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+        //}
+        #endregion
+
+        #region StructureMap, Code as Configuration
+        /* Uncomment this section and comment out the current Application_Start to use this
+         * configuration */
         protected void Application_Start() {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            var container = new WindsorContainer();
-            container.Install(new CommerceWindsorInstaller());
+            //MvcApplication.RegisterRoutes(RouteTable.Routes);
 
-            var controllerFactory = new WindsorControllerFactory(container);
+            var container = new Container();
+            Ploeh.Samples.Commerce.Web.StructureMap.CommerceCodeAsConfiguration.Configure(container);
+
+            var controllerFactory =
+                new Ploeh.Samples.Commerce.Web.StructureMap.StructureMapControllerFactory(container);
 
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
         #endregion
 
-        #region StructureMap, Code as Configuration
+        #region StructureMap, convention-based
         /* Uncomment this section and comment out the current Application_Start to use this
          * configuration */
         //protected void Application_Start() {
@@ -69,23 +90,6 @@ namespace CommerceWebMVC
         //    BundleConfig.RegisterBundles(BundleTable.Bundles);
 
         //    //MvcApplication.RegisterRoutes(RouteTable.Routes);
-
-        //    var container = new Container();
-        //    Ploeh.Samples.Commerce.Web.StructureMap.CommerceCodeAsConfiguration.Configure(container);
-
-        //    var controllerFactory =
-        //        new Ploeh.Samples.Commerce.Web.StructureMap.StructureMapControllerFactory(container);
-
-        //    ControllerBuilder.Current.SetControllerFactory(controllerFactory);
-        //}
-        #endregion
-
-        #region StructureMap, convention-based
-        /* Uncomment this section and comment out the current Application_Start to use this
-         * configuration */
-        //protected void Application_Start()
-        //{
-        //    MvcApplication.RegisterRoutes(RouteTable.Routes);
 
         //    var container = new Container();
 
